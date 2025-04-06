@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Days Since Julia Drunk Ordered Taco Bell</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Passion+One:wght@700&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Passion One', cursive;
+            background: linear-gradient(135deg, #9c27b0, #673ab7);
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0 #ff4081;
+            z-index: 2;
+            padding: 0 20px;
+        }
+        
+        .counter-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 20px 50px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            z-index: 2;
+        }
+        
+        .counter {
+            font-size: 8em;
+            animation: pulse 2s infinite;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+        
+        .days-text {
+            font-size: 2em;
+            margin-top: -10px;
+        }
+        
+        .floating {
+            position: absolute;
+            pointer-events: none;
+            animation-name: float;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            z-index: 1;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(50px, 50px) rotate(30deg); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .counter {
+                font-size: 6em;
+            }
+            
+            .counter-container {
+                padding: 15px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>DAYS SINCE JULIA DRUNK ORDERED TACO BELL</h1>
+    
+    <div class="counter-container">
+        <div class="counter" id="counter">0</div>
+        <div class="days-text">DAYS</div>
+    </div>
+    
+    <script>
+        // =====================================================
+        // THE RESET DATE - UPDATE THIS VALUE TO RESET COUNTER
+        // =====================================================
+        // Format: YYYY-MM-DD (Year-Month-Day)
+        const LAST_TACO_BELL_ORDER = "2024-04-05";
+        // =====================================================
+        
+        // Function to calculate days since the last order
+        function updateCounter() {
+            // Parse the last order date
+            const orderDate = new Date(LAST_TACO_BELL_ORDER);
+            orderDate.setHours(0, 0, 0, 0); // Set to beginning of the day
+            
+            // Get current date
+            const now = new Date();
+            now.setHours(0, 0, 0, 0); // Set to beginning of the day for accurate day calculation
+            
+            // Calculate difference in days
+            const diffTime = Math.abs(now - orderDate);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            // Update the counter display
+            document.getElementById('counter').textContent = diffDays;
+        }
+        
+        // Create floating elements (tacos, drinks, etc.)
+        function createFloatingElements(count = 15) {
+            // More tacos and drinks with higher frequencies
+            const items = [
+                '🌮', '🌮', '🌮', '🌯', '🌯', // More tacos and burritos
+                '🍹', '🍹', '🥂', '🍸', '🍸', '🍺', '🍺', '🍷', '🍷', '🥃', '🥃', // More drinks
+                '💃', '🔔', '🎉', '🍕', '🥴'  // Other related items
+            ];
+            
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const element = document.createElement('div');
+                    element.className = 'floating';
+                    element.textContent = items[Math.floor(Math.random() * items.length)];
+                    
+                    // Larger size range for more variety
+                    element.style.fontSize = `${Math.random() * 4 + 2}em`;
+                    
+                    // Position anywhere on screen
+                    element.style.left = `${Math.random() * 100}%`;
+                    element.style.top = `${Math.random() * 100}%`;
+                    
+                    // Varied opacity
+                    element.style.opacity = Math.random() * 0.7 + 0.3;
+                    
+                    // Varied animation duration and delay for more natural movement
+                    element.style.animationDuration = `${Math.random() * 15 + 5}s`;
+                    element.style.animationDelay = `${Math.random() * 5}s`;
+                    
+                    // Additional random transformations for more varied movement
+                    const direction = Math.random() > 0.5 ? 1 : -1;
+                    element.style.transform = `rotate(${Math.random() * 30 * direction}deg)`;
+                    
+                    document.body.appendChild(element);
+                    
+                    // Remove elements after longer time
+                    setTimeout(() => {
+                        element.remove();
+                    }, 20000 + Math.random() * 10000); // 20-30 seconds lifetime
+                }, i * 100);
+            }
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            // Update the counter initially
+            updateCounter();
+            
+            // Create initial floating elements - lots of them!
+            createFloatingElements(30);
+            
+            // Add new floating elements continuously
+            setInterval(() => {
+                createFloatingElements(3); // Add 3 at a time for more activity
+            }, 2000);
+        });
+        
+        // Update the counter every hour (to account for day changes)
+        setInterval(updateCounter, 3600000);
+    </script>
+</body>
+</html>
